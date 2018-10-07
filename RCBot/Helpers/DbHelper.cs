@@ -97,8 +97,16 @@ namespace RCBot.Helpers
                 else
                 {
                     var member = dbContext.members.Where(x => x.UserId == userId).FirstOrDefault();
-                    member.forTrade = (type == "n") ? ingredients : "";
-                    member.stock = (type == "h") ? ingredients : "";
+                    if(type == "n")
+                    {
+                        member.forTrade = member.forTrade + " " + ingredients;
+                    }
+                    else if (type == "h")
+                    {
+                        member.stock = member.stock + " " + ingredients;
+                    }
+                    
+                    
                     dbContext.members.Update(member);
                 }
                 dbContext.SaveChangesAsync();

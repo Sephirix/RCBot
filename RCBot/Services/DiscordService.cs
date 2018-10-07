@@ -56,9 +56,17 @@ namespace RCBot.Services
         {
             //if (BlockMessages) return;
             if (!(socketMessage is SocketUserMessage message) || message.Author.IsBot ||
-                message.Channel is IPrivateChannel || message.Author.IsWebhook) return;
+                  message.Author.IsWebhook ) return;
+
+           
             var argPos = 0;
-            if (!message.HasStringPrefix(ConfigService.Config.Prefix, ref argPos)) return;
+            if (!message.HasStringPrefix(ConfigService.Config.Prefix, ref argPos)) {
+                if (message.Channel.Id == 495567892667170849)
+                {
+                    await message.DeleteAsync();
+                }
+                return;
+            }
             var context = new CustomContext(Client, message);
             
             var Result = await Commands.ExecuteAsync(context, argPos, Provider, MultiMatchHandling.Best); 
