@@ -14,7 +14,7 @@ namespace RCBot.Services
 {
     public sealed class DiscordService : ICustomService
     {
-        
+
         private readonly ILogger Logger;
         private IServiceProvider Provider;
         private readonly DiscordSocketClient Client;
@@ -23,7 +23,7 @@ namespace RCBot.Services
         public DiscordService(ILoggerFactory factory, DiscordSocketClient client, CommandService command)
         {
 
-            Client = client;     
+            Client = client;
             Commands = command;
             Logger = factory.CreateLogger("Discord");
         }
@@ -33,7 +33,7 @@ namespace RCBot.Services
             Provider = provider;
             Client.Log += OnLog;
             Client.Ready += OnReady;
-          
+
             Client.MessageReceived += OnMessageReceived;
 
             await Commands.AddModulesAsync(Assembly.GetExecutingAssembly(), provider);
@@ -44,8 +44,8 @@ namespace RCBot.Services
 
         private async Task OnReady()
         {
-            if (Client.GetChannel(496033392106668047) is IMessageChannel channel)
-                await channel.SendMessageAsync("Hi, I'm up!" + ConfigService.Config.Prefix);
+            //if (Client.GetChannel(496033392106668047) is IMessageChannel channel)
+            //    await channel.SendMessageAsync("Hi, I'm up!" + ConfigService.Config.Prefix);
 
 
         }
@@ -56,17 +56,19 @@ namespace RCBot.Services
         {
             //if (BlockMessages) return;
             if (!(socketMessage is SocketUserMessage message) || message.Author.IsBot ||
-                  message.Author.IsWebhook ) return;
+                  message.Author.IsWebhook) return;
 
-           
+
             var argPos = 0;
-            if (!message.HasStringPrefix(ConfigService.Config.Prefix, ref argPos)) {
-                if (message.Channel.Id == 495567892667170849)
+            if (!(message.HasStringPrefix(ConfigService.Config.Prefix, ref argPos) || message.HasMentionPrefix(Client.CurrentUser, ref argPos))) {
+                if (message.Channel.Id == 498413664584466443)
                 {
                     await message.DeleteAsync();
+
                 }
                 return;
             }
+            if (!(message.Channel.Id == 498413664584466443  )) return;
             var context = new CustomContext(Client, message);
             
             var Result = await Commands.ExecuteAsync(context, argPos, Provider, MultiMatchHandling.Best); 
