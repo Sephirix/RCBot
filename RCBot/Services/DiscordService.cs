@@ -61,14 +61,30 @@ namespace RCBot.Services
 
             var argPos = 0;
             if (!(message.HasStringPrefix(ConfigService.Config.Prefix, ref argPos) || message.HasMentionPrefix(Client.CurrentUser, ref argPos))) {
-                if (message.Channel.Id == 499034652389146655)
+                if (message.Channel.Id == 498413664584466443)
                 {
                     await message.DeleteAsync();
 
                 }
-                return ;
+                return;
             }
-            if (!(message.Channel.Id == 499034652389146655)) return;
+
+            if (message.Channel.Id == 498413664584466443)
+            {
+
+            }
+             else if(message.Channel.Id == 498440748287524875 )
+            {
+                Console.Write(1);
+                if (!message.Content.Contains(ConfigService.Config.Prefix + "profile")) return;
+                Console.WriteLine(2);
+            }
+            else
+            {
+                Console.WriteLine(3);
+                return;
+            }
+            Console.WriteLine(ConfigService.Config.Prefix + "profile");
             var context = new CustomContext(Client, message);
             
             var Result = await Commands.ExecuteAsync(context, argPos, Provider, MultiMatchHandling.Best); 
