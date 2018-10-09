@@ -12,7 +12,8 @@ namespace RCBot.Modules
    public class ProfileModule : CustomBase
     {
         DbHelper db = new DbHelper();
-        [Command, Priority(0), Summary("Display user Trade Profile.")]
+
+        [Command(RunMode = RunMode.Async), Priority(0) ,Summary("Display user Trade Profile.")]
         public Task Profile(IUser user = null)
         {
             
@@ -24,7 +25,10 @@ namespace RCBot.Modules
                 return Task.CompletedTask;
                 
             }
-            var link = (member.inviteID == "n/a" || member.inviteID == "" || member.inviteID.Length > 8 || member.inviteID.Length < 6  ) ? "No invite link available" : $"Click this [Link to Add this Person](https://game.streets.cafe/?from=" + $"{member.inviteID})";
+            int id = 0;
+
+            var link = (!(Int32.TryParse(member.inviteID.ToString(), out id)) && member.inviteID.Length > 5 && member.inviteID.Length < 8) ?  $"Click this [Link to Add this Person](https://game.streets.cafe/?from=" + $"{member.inviteID})" : "No invite link available";
+            Console.WriteLine(Int32.TryParse(member.inviteID.ToString(), out id));
             var need = (member.forTrade != "" && member.forTrade != null) ? member.forTrade.ToString().Replace(",", "\n") : "empty";
        
             var have = (member.stock != "" && member.forTrade != null) ? member.stock.ToString().Replace(",", "\n") : "empty";
@@ -34,7 +38,8 @@ namespace RCBot.Modules
             embed.AddField("Invite Link: ", link);
             embed.AddField(addField("Need:", need));
             embed.AddField(addField("Stock:", have));
-            return ReplyAsync("", false, embed.Build());
+            ReplyAsync("", false, embed.Build());
+            return Task.CompletedTask;
         }
 
         [Command("Create"),Alias("update"), Summary("Create user Trade Profile.")]

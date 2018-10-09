@@ -128,11 +128,11 @@ namespace RCBot.Helpers
                     var member = dbContext.members.Where(x => x.UserId == userId).FirstOrDefault();
                     if (type == "h")
                     {
-                        member.stock = member.stock.ToString().Replace(ingredients, "");
+                        member.stock = member.stock.ToString().Replace(ingredients+" ", "");
                     }
                     else if(type =="n")
                     {
-                        member.forTrade = member.forTrade.ToString().Replace(ingredients, "");
+                        member.forTrade = member.forTrade.ToString().Replace(ingredients+" ", "");
                     }
                     //Console.WriteLine(member.n.ToString());
                     dbContext.members.Update(member);

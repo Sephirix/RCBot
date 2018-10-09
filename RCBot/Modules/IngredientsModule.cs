@@ -14,7 +14,7 @@ namespace RCBot.Modules
         DbHelper db = new DbHelper();
         ProfileModule pf = new ProfileModule();
 
-        [Command, Priority(0), Summary("Display user Trade Profile.")]
+        [Command(RunMode = RunMode.Async), Priority(0), Summary("Display user Trade Profile.")]
         public Task list(IUser user=null)
         {
             ulong searchUser = (user == null) ? Context.User.Id : user.Id;
@@ -27,7 +27,7 @@ namespace RCBot.Modules
             }
             int id = 0;
            
-            var link = (!(Int32.TryParse(member.inviteID.ToString(), out id)) && member.inviteID.Length > 5 && member.inviteID.Length < 8) ? "No invite link available" : $"Click this [Link to Add this Person](https://game.streets.cafe/?from=" + $"{member.inviteID})";
+            var link = ((Int32.TryParse(member.inviteID.ToString(), out id)) && member.inviteID.Length > 5 && member.inviteID.Length < 8) ? "No invite link available" : $"Click this [Link to Add this Person](https://game.streets.cafe/?from=" + $"{member.inviteID})";
             var need = (member.forTrade != "" && member.forTrade != null) ? member.forTrade.ToString().Replace(" ", "\n") : "empty";
             Console.WriteLine(need+" sss");
             var have = (member.stock != "" && member.forTrade != null) ? member.stock.ToString().Replace(" ", "\n") : "empty";
@@ -37,13 +37,14 @@ namespace RCBot.Modules
             embed.AddField("Invite Link: ", link);
             embed.AddField(addField("Need:",  need));
             embed.AddField(addField("Stock:", have));
-            return ReplyAsync("", false, embed.Build());
+             ReplyAsync("", false, embed.Build());
+            return Task.CompletedTask;
         }
         [Command("+need"), Summary("Add ingredient(s) to your list.")]
         public Task addToNeeds([Remainder]string ingredients)
         {
             db.addToList(Context.User.Id, "n", ingredients);
-            ReplyAsync("Ingredient(s) Added");
+           
             return list();
         }
 
@@ -51,7 +52,7 @@ namespace RCBot.Modules
         public Task addToStock([Remainder]string ingredients)
         {
             db.addToList(Context.User.Id, "h", ingredients);
-            ReplyAsync("Ingredient(s) Added");
+           
             return list();
         }
 
@@ -59,7 +60,7 @@ namespace RCBot.Modules
         public Task removeFromNeeds(string ingredients)
         {
             db.updateIngredient(Context.User.Id, ingredients, "n");
-            ReplyAsync("Ingredient Removed");
+         
             return list();
         }
 
@@ -67,7 +68,7 @@ namespace RCBot.Modules
         public Task removeFromStock(string ingredients)
         {
             db.updateIngredient(Context.User.Id, ingredients, "h");
-            ReplyAsync("Ingredient Removed");
+            
             return list();
         }
 
@@ -75,7 +76,7 @@ namespace RCBot.Modules
         public Task reset()
         {
             db.resetList(Context.User.Id);
-            ReplyAsync("List has been reset.");
+       
             return list();
         }
 
