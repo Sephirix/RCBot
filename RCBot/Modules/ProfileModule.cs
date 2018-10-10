@@ -27,7 +27,7 @@ namespace RCBot.Modules
             }
             int id = 0;
 
-            var link = (!(Int32.TryParse(member.inviteID.ToString(), out id)) && member.inviteID.Length > 5 && member.inviteID.Length < 8) ?  $"Click this [Link to Add this Person](https://game.streets.cafe/?from=" + $"{member.inviteID})" : "No invite link available";
+            var link = ((Int32.TryParse(member.inviteID.ToString(), out id)) && member.inviteID.Length > 5 && member.inviteID.Length < 8) ?  $"Click this [Link to Add this Person](https://game.streets.cafe/?from=" + $"{member.inviteID})" : "No invite link available";
             Console.WriteLine(Int32.TryParse(member.inviteID.ToString(), out id));
             var need = (member.forTrade != "" && member.forTrade != null) ? member.forTrade.ToString().Replace(",", "\n") : "empty";
        
